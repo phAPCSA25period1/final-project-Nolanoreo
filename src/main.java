@@ -1,179 +1,91 @@
-import java.util.Random;
 import java.util.Scanner;
 
-/**
- * The main entry point for the adopt me–style character game.
- * <p>
- * Players roll for a random character based on weighted probabilities.
- * They may reroll up to three times, then name their character and
- * control it through actions such as attacking, moving, resting, or doing nothing.
- * The game ends when the player exits.
- */
 public class main {
 
-    /**
-     * Launches the program, handles the reroll system, character creation,
-     * and main gameplay loop.
-     *
-     * @param args command-line arguments (unused)
-     */
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
-        Random random = new Random();
+        Egg egg = new Egg();
 
-        // Pet names and their probabilities
-        String[] pets = {"Common egg 60%", "Uncommon 30%", "Rare egg 6%", "Ultra rare egg 3%", "Legendary Egg 1%"};
-        int[] chances = {60, 30, 6, 3, 1};
+        System.out.println("Welcome to the Egg Hatching Game!");
+        System.out.println("Take care of your egg until it hatches.\n");
 
-        int rerolls = 3;
-        String chosenPet = "";
+        String pet = null;
 
-        System.out.println("Welcome to the game!");
-        System.out.println("You will roll for a random character. You have up to 3 rerolls.");
+        // GAME LOOP (before hatch)
+        while (!egg.isReadyToHatch()) {
 
-        // Reroll system
-        while (true) {
-            chosenPet = rollPet(random, pets, probabilities);
-            System.out.println("You rolled: " + chosenPet);
-
-            if (rerolls == 0) {
-                System.out.println("No rerolls left.");
-                break;
-            }
-
-            System.out.print("Do you want to reroll? (yes/no): ");
-            String response = scanner.nextLine().toLowerCase();
-
-            while (!response.equals("yes") && !response.equals("no")) {
-                System.out.print("Please type ONLY 'yes' or 'no': ");
-                response = scanner.nextLine().toLowerCase();
-            }
-
-            if (response.equals("no")) {
-                break;
-            }
-
-            rerolls--;
-        }
-
-        // Create the chosen character
-        Character character = createCharacter(chosenPet, scanner);
-
-        if (character == null) {
-            System.out.println("Error: Could not create character.");
-            return;
-        }
-
-        System.out.println("\nYou have chosen: " + character.getName());
-        character.displayInfo();
-
-        // Game loop
-        while (character.getHealth() > 0) {
-
-            System.out.println("\nWhat should your character do?");
-            System.out.println("1. Attack");
-            System.out.println("2. Move");
-            System.out.println("3. Rest");
-            System.out.println("4. Do Nothing");
-            System.out.println("5. Exit Game");
-            System.out.print("Enter your choice: ");
+            System.out.println("\nChoose an action:");
+            System.out.println("1. Play with egg (+10 happiness)");
+            System.out.println("2. Move around (+5 happiness)");
+            System.out.println("3. Rest (+15 happiness)");
+            System.out.println("4. Do nothing (+2 happiness)");
+            System.out.print("Enter choice: ");
 
             int choice = scanner.nextInt();
-            scanner.nextLine(); // consume newline
+            scanner.nextLine(); // clear buffer
 
-            // Perform the chosen action
-            boolean exitGame = handleAction(choice, character, scanner);
-            if (exitGame) return;
+            switch (choice) {
+                case 1:
+                    egg.increaseHappiness(10);
+                    break;
+                case 2:
+                    egg.increaseHappiness(5);
+                    break;
+                case 3:
+                    egg.increaseHappiness(15);
+                    break;
+                case 4:
+                    egg.increaseHappiness(2);
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+                    break;
+            }
 
-            character.displayInfo();
+            egg.displayHappinessBar();
+        }
 
-            if (character.getHealth() <= 0) {
-                System.out.println("\n" + character.getName() + " has died. Game over!");
-                break;
+        // HATCHING
+        pet = egg.hatch();
+        System.out.println("You got: " + pet);
+
+        // NAME YOUR PET
+        System.out.print("Name your " + pet + ": ");
+        String name = scanner.nextLine();
+
+        System.out.println("\n🎉 Your " + pet + " named " + name + " is ready!");
+
+        // OPTIONAL: simple post-hatch loop
+        boolean running = true;
+
+        while (running) {
+            System.out.println("\nWhat would you like to do?");
+            System.out.println("1. Play");
+            System.out.println("2. Rest");
+            System.out.println("3. Exit");
+            System.out.print("Choice: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    System.out.println(name + " is playing happily!");
+                    break;
+                case 2:
+                    System.out.println(name + " is resting...");
+                    break;
+                case 3:
+                    System.out.println("Goodbye!");
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+                    break;
             }
         }
 
         scanner.close();
-    }
-
-    /**
-     * Rolls a random pet based on weighted probability.
-     *
-     * @param random        a {@link Random} object for random number generation
-     * @param pets          an array of pet names
-     * @param probabilities an array of corresponding probability weights
-     * @return the name of the randomly selected pet
-     */
-    private static String rollPet(Random random, String[] pets, int[] probabilities) {
-        int roll = random.nextInt(100) + 1;
-        int cumulative = 0;
-
-        for (int i = 0; i < pets.length; i++) {
-            cumulative += probabilities[i];
-            if (roll <= cumulative) {
-                return pets[i];
-            }
-        }
-        return "Error";
-    }
-
-    /**
-     * Creates a character object based on the chosen pet string,
-     * while also asking the user to name the character.
-     *
-     * @param chosenPet the pet name rolled by the player
-     * @param scanner   a scanner for reading user input
-     * @return the created {@link Character} object, or null if invalid
-     */
-    private static Character createCharacter(String chosenPet, Scanner scanner) {
-
-        switch (chosenPet) {
-            case "Dart Goblin 50%":
-                System.out.println("Name your Dart Goblin:");
-                return new DartGoblin(scanner.nextLine());
-
-            case "HogRider 35%":
-                System.out.println("Name your Hog Rider:");
-                return new HogRider(scanner.nextLine());
-
-            case "Beserker 14%":
-                System.out.println("Name your Beserker:");
-                return new Beserker(scanner.nextLine());
-
-            case "Pekka 1%":
-                System.out.println("Name your Pekka:");
-                return new pekka(scanner.nextLine());
-
-            default:
-                System.out.println("Invalid character type: " + chosenPet);
-                return null;
-        }
-    }
-
-    /**
-     * Handles user actions inside the gameplay loop.
-     *
-     * @param choice    the selected action (1–5)
-     * @param character the player's current character
-     * @param scanner   a scanner for user input
-     * @return true if the player chooses to exit the game, otherwise false
-     */
-    private static boolean handleAction(int choice, Character character, Scanner scanner) {
-
-        switch (choice) {
-            case 1 -> character.attack();
-            case 2 -> character.move();
-            case 3 -> character.rest();
-            case 4 -> character.doNothing();
-            case 5 -> {
-                System.out.println("Exiting the game. Goodbye!");
-                scanner.close();
-                return true; // stop the game
-            }
-            default -> System.out.println("Invalid choice. Try again.");
-        }
-
-        return false; // continue game
     }
 }
