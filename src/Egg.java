@@ -5,8 +5,11 @@ public class Egg {
     private int happiness = 0;
     private static final int MAX_HAPPINESS = 100;
     private static final String[] PETS = {
-            "Dog", "Cat", "Otter", "Robin", "Fennec Fox",
-            "Puma", "Snow Cat", "Dingo", "Bunny", "Rabbit"
+            "Dog", "Cat", "Buffalo", "Otter", "Robin",
+            "Fennec Fox", "Puma", "Snow Cat", "Chocolate Labrador", "Dingo",
+            "Beaver", "Bunny", "Monkey", "Rabbit", "Snow Puma",
+            "Red Panda", "Shiba Inu", "Frog", "Penguin", "Koala",
+            "Dragon", "Unicorn", "Griffin", "Kangaroo", "Turtle"
     };
     private static final Random rand = new Random();
 

@@ -67,7 +67,7 @@ public class Main {
         }
 
         // HATCHING
-        System.out.println("\n🐣 Your egg is hatching...");
+        System.out.println("\n Your egg is hatching...");
 
         int rarityIndex = rollStarterRarity();
         String pet = getRandomPet(rarityIndex);
@@ -75,17 +75,50 @@ public class Main {
         System.out.println("Rarity: " + rarityNames[rarityIndex]);
         System.out.println("You got: " + pet);
 
+
+
         // NAME PET
         scanner.nextLine(); // clear buffer
         System.out.print("Name your " + pet + ": ");
         String name = scanner.nextLine();
 
-        System.out.println("\n🎉 " + name + " the " + pet + " is ready!");
+        System.out.println("\n " + name + " the " + pet + " is ready!");
 
+        System.out.println("\nChoose an action:");
+        System.out.println("1. Fetch (+10)");
+        System.out.println("2. Go for a walk (+5)");
+        System.out.println("3. Rest (+20)");
+        System.out.println("4. Feed (+15)");
+        System.out.print("Choice: ");
+        int choice = scanner.nextInt();
+
+        switch (choice) {
+            case 1:
+                happiness += 10;
+                break;
+            case 2:
+                happiness += 5;
+                break;
+            case 3:
+                happiness += 20;
+                break;
+            case 4:
+                happiness += 15;
+                break;
+            default:
+                System.out.println("Invalid choice.");
+                break;
+        }
+
+            if (happiness > MAX_HAPPINESS) {
+                happiness = MAX_HAPPINESS;
+            }
+
+            displayBar(happiness);
         scanner.close();
     }
 
-    // 🎲 Roll rarity (starter odds)
+    //  Roll rarity (starter odds)
     static int rollStarterRarity() {
         int roll = rand.nextInt(100) + 1;
 
@@ -101,13 +134,13 @@ public class Main {
             return 4; // Legendary (basically unreachable)
     }
 
-    // 🎯 Pick random pet from rarity
+    //  Pick random pet from rarity
     static String getRandomPet(int rarityIndex) {
         int index = rand.nextInt(pets[rarityIndex].length);
         return pets[rarityIndex][index];
     }
 
-    // 📊 Display happiness bar
+    //  Display happiness bar
     static void displayBar(int happiness) {
         int bars = happiness / 10;
 
@@ -119,3 +152,4 @@ public class Main {
         System.out.println("] " + happiness + "/100");
     }
 }
+
