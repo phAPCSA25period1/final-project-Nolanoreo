@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Game {
@@ -18,29 +19,36 @@ public class Game {
             System.out.println("3. Play With Pet");
             System.out.println("4. Quit");
             System.out.print("Choice: ");
+            try {
+                int choice = scanner.nextInt();
 
-            int choice = scanner.nextInt();
+                switch (choice) {
+                    case 1:
+                        Egg egg = new Egg();
+                        Pet newPet = egg.hatch(scanner);
+                        collection.add(newPet);
+                        System.out.println("Added " + newPet);
+                        break;
 
-            switch (choice) {
-                case 1:
-                    Egg egg = new Egg();
-                    Pet newPet = egg.hatch(scanner);
-                    collection.add(newPet);
-                    System.out.println("Added " + newPet);
-                    break;
+                    case 2:
+                        viewPets();
+                        break;
 
-                case 2:
-                    viewPets();
-                    break;
+                    case 3:
+                        playWithPet();
+                        break;
 
-                case 3:
-                    playWithPet();
-                    break;
+                    case 4:
+                        running = false;
+                        System.out.println("Bye Bye!");
+                        break;
 
-                case 4:
-                    running = false;
-                    System.out.println("Bye Bye!");
-                    break;
+                    default:
+                        System.out.println("Please choose 1-4.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Enter a number.");
+                scanner.nextLine(); // clear the bad token
             }
         }
 
@@ -67,7 +75,15 @@ public class Game {
 
         viewPets();
         System.out.print("Choose a pet: ");
-        int index = scanner.nextInt();
+
+        int index;
+        try {
+            index = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Enter a number.");
+            scanner.nextLine();
+            return;
+        }
 
         if (index < 0 || index >= collection.size()) {
             System.out.println("Invalid choice.");
@@ -86,14 +102,34 @@ public class Game {
             System.out.println("4. Feed");
             System.out.println("5. Stop");
 
-            int action = scanner.nextInt();
+            int action;
+            try {
+                action = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Enter a number.");
+                scanner.nextLine();
+                continue;
+            }
 
             switch (action) {
-                case 1: pet.fetch(); break;
-                case 2: pet.walk(); break;
-                case 3: pet.rest(); break;
-                case 4: pet.feed(); break;
-                case 5: playing = false; continue;
+                case 1:
+                    pet.fetch();
+                    break;
+                case 2:
+                    pet.walk();
+                    break;
+                case 3:
+                    pet.rest();
+                    break;
+                case 4:
+                    pet.feed();
+                    break;
+                case 5:
+                    playing = false;
+                    continue;
+                default:
+                    System.out.println("Please choose 1-5.");
+                    continue;
             }
 
             pet.capHappiness();
@@ -101,7 +137,14 @@ public class Game {
 
             if (pet.isMaxHappiness()) {
                 System.out.println("1. Keep\n2. Remove");
-                int decision = scanner.nextInt();
+                int decision;
+                try {
+                    decision = scanner.nextInt();
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Enter a number.");
+                    scanner.nextLine();
+                    continue;
+                }
 
                 if (decision == 2) {
                     collection.remove(index);
