@@ -2,11 +2,18 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+/**
+ * Manages the pet game loop, including hatching eggs, showing the pet
+ * collection, and playing with pets.
+ */
 public class Game {
 
     private ArrayList<Pet> collection = new ArrayList<>();
     private Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Starts the game loop and handles main menu input until the player quits.
+     */
     public void start() {
 
         boolean running = true;
@@ -54,7 +61,12 @@ public class Game {
 
         scanner.close();
     }
+    // ArrayList and seeing if there are any pets in it, if not then
 
+    /**
+     * Prints the current list of pets in the collection.
+     * If there are no pets, displays a message instead.
+     */
     private void viewPets() {
         if (collection.isEmpty()) {
             System.out.println("No pets yet!");
@@ -66,6 +78,11 @@ public class Game {
         }
     }
 
+    /**
+     * Allows the player to choose a pet and perform actions to increase
+     * that pet's happiness until the player stops or the pet reaches max
+     * happiness.
+     */
     private void playWithPet() {
 
         if (collection.isEmpty()) {
@@ -96,11 +113,11 @@ public class Game {
         while (playing) {
 
             System.out.println("\nPlaying with " + pet.getName());
-            System.out.println("1. Fetch");
-            System.out.println("2. Walk");
-            System.out.println("3. Rest");
-            System.out.println("4. Feed");
-            System.out.println("5. Stop");
+            System.out.println("1. Fetch (+10)" );
+            System.out.println("2. Walk (+5)" );
+            System.out.println("3. Rest (+20)" );
+            System.out.println("4. Feed (+15)" );
+            System.out.println("5. Stop" );
 
             int action;
             try {
@@ -136,7 +153,7 @@ public class Game {
             pet.displayBar();
 
             if (pet.isMaxHappiness()) {
-                System.out.println("1. Keep\n2. Remove");
+                System.out.println("1. Keep\n2. Release pet");
                 int decision;
                 try {
                     decision = scanner.nextInt();

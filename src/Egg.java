@@ -1,6 +1,11 @@
 import java.util.Random;
 import java.util.Scanner;
 
+/**
+ * Represents an egg that can be raised until it hatches into a pet.
+ * The egg gains happiness from player actions and then generates a pet
+ * with a random rarity and type.
+ */
 public class Egg {
 
     private int happiness;
@@ -20,6 +25,14 @@ public class Egg {
             "Common", "Uncommon", "Rare", "Ultra-Rare", "Legendary"
     };
 
+    /**
+     * Raises the egg's happiness until it reaches the hatch threshold.
+     * Prompts the user for actions, displays the growth bar, then
+     * creates and returns a newly hatched pet.
+     *
+     * @param scanner the scanner to read user choices and pet name input
+     * @return the newly hatched Pet
+     */
     public Pet hatch(Scanner scanner) {
 
         happiness = 0;
@@ -77,6 +90,12 @@ public class Egg {
         return new Pet(name, type, rarity);
     }
 
+    /**
+     * Determines the rarity index for a new pet using a random roll.
+     * The returned index corresponds to the rarity tier arrays.
+     *
+     * @return the rarity index for the hatched pet
+     */
     private int rollStarterRarity() {
         int roll = rand.nextInt(100) + 1;
 
@@ -97,6 +116,9 @@ public class Egg {
         return pets[rarityIndex][index];
     }
 
+    /**
+     * Displays the current happiness level as a text progress bar.
+     */
     private void displayBar() {
         int bars = happiness / 10;
 
