@@ -55,6 +55,13 @@ public class Pet {
         happiness += 15;
     }
 
+    /**
+     * Increases happiness by 25 when the pet plays with a toy.
+     */
+    public void playWithToy() {
+        happiness += 25;
+    }
+
     public void capHappiness() {
         if (happiness > MAX_HAPPINESS) {
             happiness = MAX_HAPPINESS;

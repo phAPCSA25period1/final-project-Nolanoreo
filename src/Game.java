@@ -10,6 +10,9 @@ public class Game {
 
     private ArrayList<Pet> collection = new ArrayList<>();
     private Scanner scanner = new Scanner(System.in);
+    private int coins = 100;
+    private int food = 0;
+    private int toys = 0;
 
     /**
      * Starts the game loop and handles main menu input until the player quits.
@@ -21,10 +24,13 @@ public class Game {
         while (running) {
 
             System.out.println("\n==== MAIN MENU ====");
+            System.out.println("Coins: " + coins);
             System.out.println("1. Hatch Egg");
             System.out.println("2. View Pets");
             System.out.println("3. Play With Pet");
-            System.out.println("4. Quit");
+            System.out.println("4. Shop");
+            System.out.println("5. Inventory");
+            System.out.println("6. Quit");
             System.out.print("Choice: ");
             try {
                 int choice = scanner.nextInt();
@@ -34,7 +40,12 @@ public class Game {
                         Egg egg = new Egg();
                         Pet newPet = egg.hatch(scanner);
                         collection.add(newPet);
-                        System.out.println("Added " + newPet);
+                        coins += 10;
+                        System.out.println("Added " + newPet + " and earned 10 coins!");
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                        }
                         break;
 
                     case 2:
@@ -46,12 +57,20 @@ public class Game {
                         break;
 
                     case 4:
+                        shop();
+                        break;
+
+                    case 5:
+                        inventory();
+                        break;
+
+                    case 6:
                         running = false;
                         System.out.println("Bye Bye!");
                         break;
 
                     default:
-                        System.out.println("Please choose 1-4.");
+                        System.out.println("Please choose 1-6.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Enter a number.");
@@ -70,11 +89,124 @@ public class Game {
     private void viewPets() {
         if (collection.isEmpty()) {
             System.out.println("No pets yet!");
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+            }
             return;
         }
 
         for (int i = 0; i < collection.size(); i++) {
             System.out.println(i + ": " + collection.get(i));
+        }
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+        }
+    }
+
+    private void inventory() {
+        System.out.println("\n==== INVENTORY ====");
+        System.out.println("Coins: " + coins);
+        System.out.println("Food: " + food);
+        System.out.println("Toys: " + toys);
+        System.out.println("\nPets:");
+        if (collection.isEmpty()) {
+            System.out.println("No pets yet!");
+        } else {
+            for (int i = 0; i < collection.size(); i++) {
+                System.out.println("  " + (i + 1) + ". " + collection.get(i));
+            }
+        }
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+        }
+    }
+
+    private void shop() {
+        boolean shopping = true;
+
+        while (shopping) {
+            System.out.println("\n==== SHOP ====");
+            System.out.println("Coins: " + coins);
+            System.out.println("1. Common Egg (50 coins)");
+            System.out.println("2. Rare Egg (100 coins)");
+            System.out.println("3. Food (+1) (20 coins)");
+            System.out.println("4. Toy (+1) (30 coins)");
+            System.out.println("5. Back");
+            System.out.print("Choice: ");
+
+            int choice;
+            try {
+                choice = scanner.nextInt();
+            } catch (Exception e) {
+                System.out.println("Invalid input. Enter a number.");
+                scanner.nextLine();
+                continue;
+            }
+
+            switch (choice) {
+                case 1:
+                    buyEgg("Common Egg", 50);
+                    break;
+                case 2:
+                    buyEgg("Rare Egg", 100);
+                    break;
+                case 3:
+                    buyItem("Food", 20);
+                    break;
+                case 4:
+                    buyItem("Toy", 30);
+                    break;
+                case 5:
+                    shopping = false;
+                    break;
+                default:
+                    System.out.println("Please choose 1-5.");
+            }
+        }
+    }
+
+    private void buyEgg(String eggType, int price) {
+        if (coins < price) {
+            System.out.println("Not enough coins for " + eggType + ".");
+            return;
+        }
+
+        coins -= price;
+        System.out.println("Bought " + eggType + " for " + price + " coins.");
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+        }
+        Egg egg = new Egg(eggType);
+        Pet newPet = egg.hatch(scanner);
+        collection.add(newPet);
+        coins += 10;
+        System.out.println("Added " + newPet + " and earned 10 coins!");
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+        }
+    }
+
+    private void buyItem(String itemName, int price) {
+        if (coins < price) {
+            System.out.println("Not enough coins for " + itemName + ".");
+            return;
+        }
+
+        coins -= price;
+        if (itemName.equals("Food")) {
+            food++;
+        } else if (itemName.equals("Toy")) {
+            toys++;
+        }
+        System.out.println("Bought 1 " + itemName + ".");
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
         }
     }
 
@@ -113,11 +245,12 @@ public class Game {
         while (playing) {
 
             System.out.println("\nPlaying with " + pet.getName());
-            System.out.println("1. Fetch (+10)" );
-            System.out.println("2. Walk (+5)" );
-            System.out.println("3. Rest (+20)" );
-            System.out.println("4. Feed (+15)" );
-            System.out.println("5. Stop" );
+            System.out.println("1. Fetch (+10)");
+            System.out.println("2. Walk (+5)");
+            System.out.println("3. Rest (+20)");
+            System.out.println("4. Feed (+15) [Food: " + food + "]");
+            System.out.println("5. Give Toy (+25) [Toys: " + toys + "]");
+            System.out.println("6. Stop");
 
             int action;
             try {
@@ -131,26 +264,48 @@ public class Game {
             switch (action) {
                 case 1:
                     pet.fetch();
+                    coins += 5;
                     break;
                 case 2:
                     pet.walk();
+                    coins += 2;
                     break;
                 case 3:
                     pet.rest();
+                    coins += 3;
                     break;
                 case 4:
+                    if (food <= 0) {
+                        System.out.println("You have no food. Buy some in the shop.");
+                        continue;
+                    }
                     pet.feed();
+                    food--;
+                    coins += 1;
                     break;
                 case 5:
+                    if (toys <= 0) {
+                        System.out.println("You have no toys. Buy one in the shop.");
+                        continue;
+                    }
+                    pet.playWithToy();
+                    toys--;
+                    coins += 2;
+                    break;
+                case 6:
                     playing = false;
                     continue;
                 default:
-                    System.out.println("Please choose 1-5.");
+                    System.out.println("Please choose 1-6.");
                     continue;
             }
 
             pet.capHappiness();
             pet.displayBar();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+            }
 
             if (pet.isMaxHappiness()) {
                 System.out.println("1. Keep\n2. Release pet");

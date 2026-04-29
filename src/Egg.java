@@ -10,6 +10,7 @@ public class Egg {
 
     private int happiness;
     private final int MAX_HAPPINESS = 100;
+    private String eggType;
 
     private static Random rand = new Random();
 
@@ -33,11 +34,20 @@ public class Egg {
      * @param scanner the scanner to read user choices and pet name input
      * @return the newly hatched Pet
      */
+    public Egg() {
+        this("Common Egg");
+    }
+
+    public Egg(String eggType) {
+        this.eggType = eggType;
+    }
+
     public Pet hatch(Scanner scanner) {
 
         happiness = 0;
 
         System.out.println("\nRaise your egg's happiness to hatch it!");
+        System.out.println("Egg type: " + eggType);
 
         while (happiness < MAX_HAPPINESS) {
 
@@ -72,6 +82,10 @@ public class Egg {
             }
 
             displayBar();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+            }
         }
 
         System.out.println("\nYour egg is hatching...");
@@ -98,6 +112,19 @@ public class Egg {
      */
     private int rollStarterRarity() {
         int roll = rand.nextInt(100) + 1;
+
+        if (eggType.equals("Rare Egg")) {
+            if (roll <= 55)
+                return 0;
+            else if (roll <= 85)
+                return 1;
+            else if (roll <= 95)
+                return 2;
+            else if (roll <= 99)
+                return 3;
+            else
+                return 4;
+        }
 
         if (roll <= 70)
             return 0;
