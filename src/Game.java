@@ -13,6 +13,7 @@ public class Game {
     private int coins = 100;
     private int food = 0;
     private int toys = 0;
+    private ArrayList<Quest> quests = new ArrayList<>();
 
     /**
      * Starts the game loop and handles main menu input until the player quits.
@@ -20,6 +21,8 @@ public class Game {
     public void start() {
 
         boolean running = true;
+
+        initQuests();
 
         while (running) {
 
@@ -30,7 +33,8 @@ public class Game {
             System.out.println("3. Play With Pet");
             System.out.println("4. Shop");
             System.out.println("5. Inventory");
-            System.out.println("6. Quit");
+            System.out.println("6. Quests");
+            System.out.println("7. Quit");
             System.out.print("Choice: ");
             try {
                 int choice = scanner.nextInt();
@@ -42,6 +46,7 @@ public class Game {
                         collection.add(newPet);
                         coins += 10;
                         System.out.println("Added " + newPet + " and earned 10 coins!");
+                        updateQuest("Hatch 1 egg", 1);
                         try {
                             Thread.sleep(500);
                         } catch (InterruptedException e) {
@@ -65,12 +70,16 @@ public class Game {
                         break;
 
                     case 6:
+                        showQuests();
+                        break;
+
+                    case 7:
                         running = false;
                         System.out.println("Bye Bye!");
                         break;
 
                     default:
-                        System.out.println("Please choose 1-6.");
+                        System.out.println("Please choose 1-7.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Enter a number.");
@@ -121,6 +130,75 @@ public class Game {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
+        }
+    }
+
+    private void initQuests() {
+        quests.add(new Quest("Hatch 1 egg", 15, 1));
+        quests.add(new Quest("Buy 1 toy", 10, 1));
+        quests.add(new Quest("Play with a pet 3 times", 20, 3));
+    }
+
+    private void showQuests() {
+        System.out.println("\n==== QUESTS ====");
+        for (int i = 0; i < quests.size(); i++) {
+            System.out.println((i + 1) + ". " + quests.get(i));
+        }
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+        }
+    }
+
+    private void updateQuest(String description, int amount) {
+        for (Quest quest : quests) {
+            if (!quest.isComplete() && quest.getDescription().equals(description)) {
+                quest.advance(amount);
+                if (quest.isComplete()) {
+                    coins += quest.getReward();
+                    System.out.println("Quest complete! +" + quest.getReward() + " coins");
+                }
+            }
+        }
+    }
+
+    private class Quest {
+        private String description;
+        private int reward;
+        private int progress;
+        private int goal;
+
+        public Quest(String description, int reward, int goal) {
+            this.description = description;
+            this.reward = reward;
+            this.goal = goal;
+            this.progress = 0;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public int getReward() {
+            return reward;
+        }
+
+        public boolean isComplete() {
+            return progress >= goal;
+        }
+
+        public void advance(int amount) {
+            progress += amount;
+            if (progress > goal) {
+                progress = goal;
+            }
+        }
+
+        public String toString() {
+            if (isComplete()) {
+                return description + " - Completed! (" + reward + " coins)";
+            }
+            return description + " (" + progress + "/" + goal + ") - " + reward + " coins";
         }
     }
 
@@ -185,6 +263,7 @@ public class Game {
         collection.add(newPet);
         coins += 10;
         System.out.println("Added " + newPet + " and earned 10 coins!");
+        updateQuest("Hatch 1 egg", 1);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -204,6 +283,9 @@ public class Game {
             toys++;
         }
         System.out.println("Bought 1 " + itemName + ".");
+        if (itemName.equals("Toy")) {
+            updateQuest("Buy 1 toy", 1);
+        }
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -265,14 +347,17 @@ public class Game {
                 case 1:
                     pet.fetch();
                     coins += 5;
+                    updateQuest("Play with a pet 3 times", 1);
                     break;
                 case 2:
                     pet.walk();
                     coins += 2;
+                    updateQuest("Play with a pet 3 times", 1);
                     break;
                 case 3:
                     pet.rest();
                     coins += 3;
+                    updateQuest("Play with a pet 3 times", 1);
                     break;
                 case 4:
                     if (food <= 0) {
@@ -282,6 +367,7 @@ public class Game {
                     pet.feed();
                     food--;
                     coins += 1;
+                    updateQuest("Play with a pet 3 times", 1);
                     break;
                 case 5:
                     if (toys <= 0) {
@@ -291,6 +377,7 @@ public class Game {
                     pet.playWithToy();
                     toys--;
                     coins += 2;
+                    updateQuest("Play with a pet 3 times", 1);
                     break;
                 case 6:
                     playing = false;
