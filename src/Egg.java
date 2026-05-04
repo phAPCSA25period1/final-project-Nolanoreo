@@ -112,30 +112,48 @@ public class Egg {
      */
     private int rollStarterRarity() {
         int roll = rand.nextInt(100) + 1;
+        int rarity;
 
         if (eggType.equals("Rare Egg")) {
             if (roll <= 55)
-                return 0;
+                rarity = 0;
             else if (roll <= 85)
-                return 1;
+                rarity = 1;
             else if (roll <= 95)
-                return 2;
+                rarity = 2;
             else if (roll <= 99)
-                return 3;
+                rarity = 3;
             else
-                return 4;
+                rarity = 4;
+            // Increase rarity by one level for rare eggs
+            rarity += 1;
+            if (rarity > 4) {
+                rarity = 4;
+            }
+        } else if (eggType.equals("Uncommon Egg")) {
+            if (roll <= 60)
+                rarity = 1;
+            else if (roll <= 88)
+                rarity = 2;
+            else if (roll <= 97)
+                rarity = 3;
+            else
+                rarity = 4;
+        } else {
+            // Common eggs keep original distribution
+            if (roll <= 70)
+                rarity = 0;
+            else if (roll <= 92)
+                rarity = 1;
+            else if (roll <= 98)
+                rarity = 2;
+            else if (roll <= 100)
+                rarity = 3;
+            else
+                rarity = 4;
         }
 
-        if (roll <= 70)
-            return 0;
-        else if (roll <= 92)
-            return 1;
-        else if (roll <= 98)
-            return 2;
-        else if (roll <= 100)
-            return 3;
-        else
-            return 4;
+        return rarity;
     }
 
     private String getRandomPet(int rarityIndex) {

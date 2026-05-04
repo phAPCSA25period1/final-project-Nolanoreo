@@ -208,7 +208,7 @@ public class Game {
         while (shopping) {
             System.out.println("\n==== SHOP ====");
             System.out.println("Coins: " + coins);
-            System.out.println("1. Common Egg (50 coins)");
+            System.out.println("1. Uncommon Egg (50 coins)");
             System.out.println("2. Rare Egg (100 coins)");
             System.out.println("3. Food (+1) (20 coins)");
             System.out.println("4. Toy (+1) (30 coins)");
@@ -226,7 +226,7 @@ public class Game {
 
             switch (choice) {
                 case 1:
-                    buyEgg("Common Egg", 50);
+                    buyEgg("Uncommon Egg", 50);
                     break;
                 case 2:
                     buyEgg("Rare Egg", 100);
