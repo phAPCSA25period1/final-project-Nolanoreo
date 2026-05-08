@@ -34,7 +34,8 @@ public class Game {
             System.out.println("4. Shop");
             System.out.println("5. Inventory");
             System.out.println("6. Quests");
-            System.out.println("7. Quit");
+            System.out.println("7. Combine Pets");
+            System.out.println("8. Quit");
             System.out.print("Choice: ");
             try {
                 int choice = scanner.nextInt();
@@ -74,12 +75,16 @@ public class Game {
                         break;
 
                     case 7:
+                        combinePets();
+                        break;
+
+                    case 8:
                         running = false;
                         System.out.println("Bye Bye!");
                         break;
 
                     default:
-                        System.out.println("Please choose 1-7.");
+                        System.out.println("Please choose 1-8.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Enter a number.");
@@ -411,5 +416,69 @@ public class Game {
                 }
             }
         }
+    }
+
+    private void combinePets() {
+        if (collection.size() < 2) {
+            System.out.println("You need at least two pets to combine them.");
+            return;
+        }
+
+        viewPets();
+        System.out.print("Choose the first pet: ");
+        int firstIndex;
+        try {
+            firstIndex = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Enter a number.");
+            scanner.nextLine();
+            return;
+        }
+
+        if (firstIndex < 0 || firstIndex >= collection.size()) {
+            System.out.println("Invalid choice.");
+            return;
+        }
+
+        System.out.print("Choose a different second pet: ");
+        int secondIndex;
+        try {
+            secondIndex = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Enter a number.");
+            scanner.nextLine();
+            return;
+        }
+
+        if (secondIndex < 0 || secondIndex >= collection.size() || secondIndex == firstIndex) {
+            System.out.println("Invalid choice. Pick two different pets.");
+            return;
+        }
+
+        Pet firstPet = collection.get(firstIndex);
+        Pet secondPet = collection.get(secondIndex);
+        String hybridName = combineNames(firstPet.getName(), secondPet.getName());
+        String hybridType = firstPet.getType() + "-" + secondPet.getType();
+        String hybridRarity = "Hybrid";
+
+        Pet hybridPet = new Pet(hybridName, hybridType, hybridRarity);
+
+        int removeIndex = Math.max(firstIndex, secondIndex);
+        int keepIndex = Math.min(firstIndex, secondIndex);
+        collection.remove(removeIndex);
+        collection.remove(keepIndex);
+        collection.add(hybridPet);
+
+        System.out.println("Created hybrid pet: " + hybridPet);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+        }
+    }
+
+    private String combineNames(String name1, String name2) {
+        String firstPart = name1.length() <= 3 ? name1 : name1.substring(0, 3);
+        String secondPart = name2.length() <= 3 ? "" : name2.substring(3);
+        return firstPart + secondPart;
     }
 }
