@@ -35,7 +35,8 @@ public class Game {
             System.out.println("5. Inventory");
             System.out.println("6. Quests");
             System.out.println("7. Combine Pets");
-            System.out.println("8. Quit");
+            System.out.println("8. Create Neon Pet");
+            System.out.println("9. Quit");
             System.out.print("Choice: ");
             try {
                 int choice = scanner.nextInt();
@@ -79,12 +80,16 @@ public class Game {
                         break;
 
                     case 8:
+                        createNeonPet();
+                        break;
+
+                    case 9:
                         running = false;
                         System.out.println("Bye Bye!");
                         break;
 
                     default:
-                        System.out.println("Please choose 1-8.");
+                        System.out.println("Please choose 1-9.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Enter a number.");
@@ -470,6 +475,73 @@ public class Game {
         collection.add(hybridPet);
 
         System.out.println("Created hybrid pet: " + hybridPet);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+        }
+    }
+
+    private void createNeonPet() {
+        if (collection.size() < 4) {
+            System.out.println("You need at least four pets to create a neon.");
+            return;
+        }
+
+        ArrayList<String> eligibleTypes = new ArrayList<>();
+
+        for (int i = 0; i < collection.size(); i++) {
+            String type = collection.get(i).getType();
+            int count = 0;
+            for (Pet pet : collection) {
+                if (pet.getType().equals(type)) {
+                    count++;
+                }
+            }
+            if (count >= 4 && !eligibleTypes.contains(type)) {
+                eligibleTypes.add(type);
+            }
+        }
+
+        if (eligibleTypes.isEmpty()) {
+            System.out.println("No pet type has four copies yet.");
+            return;
+        }
+
+        System.out.println("==== NEON PETS ====");
+        for (int i = 0; i < eligibleTypes.size(); i++) {
+            System.out.println((i + 1) + ". " + eligibleTypes.get(i));
+        }
+        System.out.print("Choose a type to turn into a neon: ");
+
+        int choice;
+        try {
+            choice = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Enter a number.");
+            scanner.nextLine();
+            return;
+        }
+
+        if (choice < 1 || choice > eligibleTypes.size()) {
+            System.out.println("Invalid choice.");
+            return;
+        }
+
+        String neonType = eligibleTypes.get(choice - 1);
+        String neonName = "Neon " + neonType;
+        String neonRarity = "Neon";
+
+        int removed = 0;
+        for (int i = collection.size() - 1; i >= 0 && removed < 4; i--) {
+            if (collection.get(i).getType().equals(neonType)) {
+                collection.remove(i);
+                removed++;
+            }
+        }
+
+        Pet neonPet = new Pet(neonName, neonType, neonRarity);
+        collection.add(neonPet);
+        System.out.println("Created neon pet: " + neonPet);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
