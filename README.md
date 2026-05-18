@@ -53,7 +53,7 @@ Your commit history is **evidence of your thinking and progress**.
 
 ## 🔁 Agile Development & Sprints
 
-You will complete **4 sprints**.  
+You will complete **4 sprints**.
 Each sprint includes:
 - Planning
 - Building
@@ -65,7 +65,7 @@ Each sprint ends with:
 - A sprint reflection
 - Feedback exchanged with peers
 
-🚫 You may NOT complete multiple sprints at once.  
+🚫 You may NOT complete multiple sprints at once.
 ✅ Each sprint grade is **final**.
 
 ---
@@ -142,7 +142,7 @@ By the end of the project:
 
 # ✨ Final Step: README Update (Very Important)
 
-When your project is complete, you must **rewrite this README**  
+When your project is complete, you must **rewrite this README**
 so it reflects **your software**, not the assignment.
 
 Your final README should include:
@@ -150,6 +150,7 @@ Your final README should include:
 ---
 
 ## 🔹 Project Title
+RandomEggGame
 
 ## 🔹 What This Software Does
 Explain your project in plain language.
@@ -184,6 +185,6 @@ Take pride in:
 - Your code
 - Your documentation
 
-Build something real.  
-Build it thoughtfully.  
+Build something real.
+Build it thoughtfully.
 Build it well.
